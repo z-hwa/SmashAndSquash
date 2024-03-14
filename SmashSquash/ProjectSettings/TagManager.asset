@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - wall
+  - unit
+  - enemy
+  - package
+  - packageSystem
+  - Health Bar Canvas
+  - VolumnPage
+  - Loading
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - BackGround
+  - Wall
+  - 
+  - Game
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Maps
+    uniqueID: 1157011861
+    locked: 0
+  - name: Game
+    uniqueID: 1897204511
+    locked: 0
+  - name: Story
+    uniqueID: 453145739
+    locked: 0
