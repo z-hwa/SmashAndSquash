@@ -1,0 +1,26 @@
+SmashSquash/Assets/TextMesh Pro/MSJH SDF.asset
+SmashSquashMaterial/
+SmashSquash/SmashSquash_key.keystore
+SmashSquash/Output/
+SmashSquash/Library/
+SmashSquash/.vs
+SmashSquash/Assets/DinV/
+SmashSquash/Assets/Flower/Resources/
+SmashSquash/Assets/Gentleland/
+SmashSquash/Assets/GentlelandSettings/
+SmashSquash/Assets/OccaSoftware/
+SmashSquash/Assets/Plugins/
+SmashSquash/Assets/Prefabs/
+SmashSquash/Assets/Sprite/
+SmashSquash/Assets/StreamingAssets/
+SmashSquash/Assets/TextMesh Pro/
+SmashSquash/Assets/Texture/
+SmashSquash/Assets/Travis Game Assets/
+SmashSquash/Logs/
+SmashSquash/obj/
+SmashSquash/Packages/
+SmashSquash/ProjectSettings/
+SmashSquash/UserSettings/
+SmashSquash/.vsconfig
+SmashSquash/*.csproj
+SmashSquash/*.sln
