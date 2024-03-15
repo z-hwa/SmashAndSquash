@@ -45,6 +45,8 @@ public class RadioSystem : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+
+        EventManager.AddListener(EventName.PlayRadio, PlayRadio);
     }
 
     /// <summary>
@@ -55,6 +57,20 @@ public class RadioSystem : MonoBehaviour
     {
         if (type == RadioType.System) PlayRadio_System(message);
         else if(type == RadioType.UnitSkill) PlayRadio_UnitSkill(message);
+    }
+
+    /// <summary>
+    /// 播放廣播
+    /// </summary>
+    /// <param name="_message">廣播訊息</param>
+    /// <param name="_type">廣播類別</param>
+    public void PlayRadio(object _message, object _type)
+    {
+        string message = _message.ToString();
+        RadioType type = (RadioType)_type;
+
+        if (type == RadioType.System) PlayRadio_System(message);
+        else if (type == RadioType.UnitSkill) PlayRadio_UnitSkill(message);
     }
 
     /// <summary>

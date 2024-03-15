@@ -8,59 +8,49 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class PrepareSystem : MonoBehaviour
 {
-    public static PrepareSystem instance;
-
-    //各種系統
-    private SavedAndLoaded savedAndLoaded;
-    private PlayerAccountSystem playerAccountSystem;
-    private MusicSystem musicSystem;
-    private LoadingSystem loadingSystem;
+    private static PrepareSystem _prepareSystem;
 
     /// <summary>
     /// 單例模式，避免重複生成的檢查
     /// </summary>
-    private void Awake()
+    public static PrepareSystem Instance
     {
-        if (instance == null)
+        get
         {
-            instance = this;
-        }
-        else
-        {
-            if (instance != this)
+            if(_prepareSystem == null)
             {
-                Destroy(gameObject);
+                _prepareSystem = FindObjectOfType(typeof(PrepareSystem)) as PrepareSystem;
+                if (_prepareSystem == null) Debug.LogError("no object with PrepareSystem");
+                else
+                {
+                }
             }
-        }
 
-        //DontDestroyOnLoad(gameObject);
+            return _prepareSystem;
+        }
     }
+
 
     void Start()
     {
-        savedAndLoaded = SavedAndLoaded.instance;
-        playerAccountSystem = PlayerAccountSystem.instance;
-        musicSystem = MusicSystem.instance;
-        loadingSystem = LoadingSystem.instance;
-        
         //撥放開始介面BGM
-        musicSystem.PlayMusic(ConstantChart.backgroundBGM); 
+        MusicSystem.instance.PlayMusic(ConstantChart.backgroundBGM); 
     }
 
     //載入主頁面
     //加載全局資源
     public void TouchToStart()
     {
-        savedAndLoaded.LoadData();  //載入存檔
+        SavedAndLoaded.Instance.LoadData();  //載入存檔
 
         //載入場景
-        if (playerAccountSystem.storyRecorder.openingIntro == false)
+        if (PlayerAccountSystem.Instance.storyRecorder.openingIntro == false)
         {
-            loadingSystem.LoadTargetScene("OpeningScene");
+            LoadingSystem.Instance.LoadTargetScene("OpeningScene");
         }
         else
         {
-            loadingSystem.LoadTargetScene("MainScene");
+            LoadingSystem.Instance.LoadTargetScene("MainScene");
         }
     }
 }

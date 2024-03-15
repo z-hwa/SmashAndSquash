@@ -14,8 +14,6 @@ public class UnitInfoSystem : MonoBehaviour
     private bool isInit = false;
 
     private PackageSystem packageSystem;
-    private PlayerAccountSystem playerAccountSystem;
-    private SavedAndLoaded savedAndLoaded;
     private StorySystem storySystem;
     private LoadingSystem loadingSystem;
 
@@ -85,9 +83,7 @@ public class UnitInfoSystem : MonoBehaviour
         {
             //加載系統
             packageSystem = PackageSystem.instance;
-            playerAccountSystem = PlayerAccountSystem.instance;
-            savedAndLoaded = SavedAndLoaded.instance;
-            loadingSystem = LoadingSystem.instance;
+            loadingSystem = LoadingSystem._loadingSystem;
 
             //獲得該單位的id
             int idInPackage = packageSystem.unitId;
@@ -96,7 +92,7 @@ public class UnitInfoSystem : MonoBehaviour
             LoadingInfo();  //載入這個單位的資料
 
             //檢測是否需要教學故事
-            if (playerAccountSystem.storyRecorder.unitPageTutorial == false)
+            if (PlayerAccountSystem.Instance.storyRecorder.unitPageTutorial == false)
             {
                 storySystem = StorySystem.instance;
                 storySystem.LoadingStory("NoviceTeaching/unitPageTutorial");
@@ -114,16 +110,16 @@ public class UnitInfoSystem : MonoBehaviour
         int amount = int.Parse(changeSpiritAmount.text);    //獲得添加的數量
 
         //確認玩家靈力數量足夠
-        if(playerAccountSystem.spirit >= amount)
+        if(PlayerAccountSystem.Instance.spirit >= amount)
         {
-            playerAccountSystem.spirit -= amount;
+            PlayerAccountSystem.Instance.spirit -= amount;
             data.tempExp += amount;
 
             unit.LevelCounter();    //計算等級
 
             LoadingInfo();  //重新載入單位資料
 
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }else
         {
             Debug.Log("靈力數量不足");
@@ -137,16 +133,16 @@ public class UnitInfoSystem : MonoBehaviour
     {
         int amount = int.Parse(addThreaAmount.text);
 
-        if (playerAccountSystem.threa >= amount)
+        if (PlayerAccountSystem.Instance.threa >= amount)
         {
-            playerAccountSystem.threa -= amount;
+            PlayerAccountSystem.Instance.threa -= amount;
             data.tempThrea += amount;
 
             unit.SpiritControlCounter();    //計算靈力掌控程度
 
             LoadingInfo();  //重新載入單位資料
 
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
         else
         {
@@ -171,13 +167,13 @@ public class UnitInfoSystem : MonoBehaviour
 
         //經驗值相關
         tempExp.text = "當前經驗值: " + data.tempExp.ToString();
-        spiritRemain.text = "背包剩餘靈力數量: " + playerAccountSystem.spirit.ToString();
+        spiritRemain.text = "背包剩餘靈力數量: " + PlayerAccountSystem.Instance.spirit.ToString();
         toNextLevelExp.text = "提升至下一等級所需靈力: " + unit.SearchNextLevelExp().ToString();
 
         //靈力相關
         spiritControl.text = "靈力掌控程度: " + data.spiritControl.ToString();
         tempThrea.text = "單位已累計靈粹數量: " + data.tempThrea.ToString();
-        threaRemain.text = "背包剩餘靈粹數量: " + playerAccountSystem.threa.ToString();
+        threaRemain.text = "背包剩餘靈粹數量: " + PlayerAccountSystem.Instance.threa.ToString();
         if(data.spiritControl == SpiritControlStandard.Zp)
         {
             toNextControlLevel.color = Color.red;

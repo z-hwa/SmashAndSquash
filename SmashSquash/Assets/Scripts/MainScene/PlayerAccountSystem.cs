@@ -7,9 +7,28 @@ using UnityEngine;
 /// </summary>
 public class PlayerAccountSystem : MonoBehaviour
 {
-    public static PlayerAccountSystem instance;
+    private static PlayerAccountSystem _playerAccountSystem;
 
-    private PlayerInfo playerInfo;
+    /// <summary>
+    /// 單例模式，避免重複生成的檢查
+    /// </summary>
+    public static PlayerAccountSystem Instance
+    {
+        get
+        {
+            if(_playerAccountSystem == null)
+            {
+                _playerAccountSystem = FindObjectOfType(typeof(PlayerAccountSystem)) as PlayerAccountSystem;
+                if(_playerAccountSystem == null) { Debug.LogError("no object with PlayerAccountSystem"); }
+                else
+                {
+                    _playerAccountSystem.Init();
+                }
+            }
+
+            return _playerAccountSystem;
+        }
+    }
 
     [Header("玩家資料")]
     public string playerName = "暫無名稱";
@@ -22,29 +41,14 @@ public class PlayerAccountSystem : MonoBehaviour
     [Header("故事播放記錄")]
     public StoryRecorder storyRecorder = new StoryRecorder();
 
-    /// <summary>
-    /// 單例模式，避免重複生成的檢查
-    /// </summary>
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            if (instance != this)
-            {
-                Destroy(gameObject);
-            }
-        }
-
-        DontDestroyOnLoad(gameObject);
+        Init();
     }
 
-    void Start()
+    private void Init()
     {
-        playerInfo = PlayerInfo.instance;
+        DontDestroyOnLoad(gameObject);
     }
 
     /// <summary>
@@ -52,6 +56,7 @@ public class PlayerAccountSystem : MonoBehaviour
     /// </summary>
     public void ShowPlayerInfo()
     {
-        playerInfo.ShowPlayerInfo();
+        //playerInfo.ShowPlayerInfo();
+        EventManager.Trigger(EventName.ShowPlayerInfo);
     }
 }

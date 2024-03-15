@@ -14,8 +14,6 @@ public class StorySystem : MonoBehaviour
     public static StorySystem instance;
 
     private FlowerSystem flowerSystem;
-    private PlayerAccountSystem playerAccountSystem;
-    private SavedAndLoaded savedAndLoaded;
     private BottomBar bottomBar;
     private MusicSystem musicSystem;
     private LoadingSystem loadingSystem;
@@ -47,10 +45,8 @@ public class StorySystem : MonoBehaviour
     void Start()
     {
         //其他系統
-        playerAccountSystem = PlayerAccountSystem.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
         musicSystem = MusicSystem.instance;
-        loadingSystem = LoadingSystem.instance;
+        loadingSystem = LoadingSystem._loadingSystem;
 
         flowerSystem = FlowerManager.Instance.CreateFlowerSystem("default", false);    //創建flower系統
         flowerSystem.SetupDialog();     //加載預設的對話框等等
@@ -130,8 +126,8 @@ public class StorySystem : MonoBehaviour
         //註冊某個故事放完的指令
         flowerSystem.RegisterCommand("ReadedStory", (List<string> _params) =>
         {
-            playerAccountSystem.storyRecorder.ReadedStory(_params[0]);   //設為已經閱讀過該故事
-            savedAndLoaded.SaveData();
+            PlayerAccountSystem.Instance.storyRecorder.ReadedStory(_params[0]);   //設為已經閱讀過該故事
+            SavedAndLoaded.Instance.SaveData();
         });
 
         //註冊主頁面中 切換頁面的指令

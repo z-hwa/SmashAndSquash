@@ -12,8 +12,6 @@ public class SettingSystem : MonoBehaviour
 
     public GameObject settingPage;
 
-    private LoadingSystem loadingSystem;
-
     /// <summary>
     /// 單例模式，避免重複生成的檢查
     /// </summary>
@@ -49,7 +47,6 @@ public class SettingSystem : MonoBehaviour
     /// </summary>
     public void GoToMain()
     {
-        loadingSystem = LoadingSystem.instance;
-        loadingSystem.LoadTargetScene("MainScene");
+        LoadingSystem.Instance.LoadTargetScene("MainScene");
     }
 }

@@ -12,7 +12,6 @@ public class DevelopSystem : MonoBehaviour
     [Header("系統")]
     private UnitBook unitBook;   //unitBook的系統
     private PackageSystem packageSystem;
-    private SavedAndLoaded savedAndLoaded;
     public GameObject package;
 
     [Header("輔助元件")]
@@ -43,7 +42,6 @@ public class DevelopSystem : MonoBehaviour
     {
         //獲取系統
         packageSystem = PackageSystem.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
         unitBook = UnitBook.instance;
     }
 
@@ -69,13 +67,13 @@ public class DevelopSystem : MonoBehaviour
     //儲存測試
     public void Save()
     {
-        savedAndLoaded.SaveData();
+        SavedAndLoaded.Instance.SaveData();
     }
 
     //載入測試
     public void Load()
     {
-        savedAndLoaded.LoadData();
+        SavedAndLoaded.Instance.LoadData();
     }
 
     // test stage function

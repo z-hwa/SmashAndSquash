@@ -21,7 +21,6 @@ public class BottomBar : MonoBehaviour
     //系統
     private PackagePage packagePage;
     private PlayerInfo playerInfo;
-    private LoadingSystem loadingSystem;
 
     //特殊物件
     public GameObject stageDefault; //用於在非主頁 代替關卡選項
@@ -51,7 +50,6 @@ public class BottomBar : MonoBehaviour
         //設置系統
         packagePage = PackagePage.instance;
         playerInfo = PlayerInfo.instance;
-        loadingSystem = LoadingSystem.instance;
 
         //預設進入main page
         GoToMainPage();
@@ -105,7 +103,7 @@ public class BottomBar : MonoBehaviour
     /// </summary>
     public void GoToStageInfo()
     {
-        loadingSystem.LoadTargetScene("StageScene");
+        LoadingSystem.Instance.LoadTargetScene("StageScene");
     }
 
     /// <summary>

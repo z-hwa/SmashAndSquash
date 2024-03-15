@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,7 +11,7 @@ using UnityEngine.UI;
 /// </summary>
 public class LoadingSystem : MonoBehaviour
 {
-    public static LoadingSystem instance;
+    private static LoadingSystem _loadingSystem;
 
     [Header("加載介面設定")]
     public GameObject LoadingCanvas;
@@ -23,20 +24,33 @@ public class LoadingSystem : MonoBehaviour
     /// <summary>
     /// 單例模式，避免重複生成的檢查
     /// </summary>
-    private void Awake()
+    public static LoadingSystem Instance
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            if (instance != this)
+        get { 
+            if(!_loadingSystem)
             {
-                Destroy(gameObject);
+                _loadingSystem = FindObjectOfType(typeof(LoadingSystem)) as LoadingSystem;
+                if (!_loadingSystem) Debug.LogError("There needs to be one active LoadingSystem script on a Gameobject"); //找不到輸出錯誤訊息
+                else
+                {
+                    _loadingSystem.Init();
+                }
             }
-        }
 
+            return _loadingSystem;
+        }
+    }
+
+    void Awake()
+    {
+        Init();
+    }
+
+    /// <summary>
+    /// 初始化
+    /// </summary>
+    private void Init()
+    {
         DontDestroyOnLoad(gameObject);
     }
 
@@ -55,7 +69,7 @@ public class LoadingSystem : MonoBehaviour
         LoadingCanvas.SetActive(true);
         StartCoroutine(LoadLevel(sceneName));
     }
-    
+
     /// <summary>
     /// 異步加載場景
     /// </summary>

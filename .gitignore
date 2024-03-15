@@ -16,3 +16,7 @@ SmashSquash/Assets/StreamingAssets/
 SmashSquash/Assets/TextMesh Pro/
 SmashSquash/Assets/Texture/
 SmashSquash/Assets/Travis Game Assets/
+SmashSquash/*.csproj
+SmashSquash/obj/
+SmashSquash - copy/
+SmashSquash/Assets/log*

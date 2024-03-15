@@ -17,7 +17,6 @@ public class PackagePage : MonoBehaviour
     private PackageSystem packageSystem;
     private BottomBar bottomBar;
     private RadioSystem radioSystem;
-    private SavedAndLoaded savedAndLoaded;
 
     //美術
     public GameObject chooseEffect;
@@ -55,7 +54,6 @@ public class PackagePage : MonoBehaviour
         packageSystem = PackageSystem.instance;
         bottomBar = BottomBar.instance;
         radioSystem = RadioSystem.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
 
         //如果背包介面是打開的 加載背包
         if (bottomBar.packageCanva.activeSelf == true) LoadingPackage();
@@ -131,7 +129,7 @@ public class PackagePage : MonoBehaviour
             //廣播設置成功資訊
             radioSystem.PlayRadio($"設置{data.use_data.unitName}到對列{pos}成功", RadioType.System);
 
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
     }
 
@@ -151,7 +149,7 @@ public class PackagePage : MonoBehaviour
             //廣播設置取消資訊
             radioSystem.PlayRadio($"設置對列{pos}取消成功", RadioType.System);
 
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
     }
 

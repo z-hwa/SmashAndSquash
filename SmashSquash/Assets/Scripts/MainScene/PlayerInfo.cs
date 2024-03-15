@@ -25,9 +25,7 @@ public class PlayerInfo : MonoBehaviour
     public TMP_InputField renameInput;
 
     //系統
-    private PlayerAccountSystem playerAccountSystem;
     private BottomBar bottomBar;
-    private SavedAndLoaded savedAndLoaded;
     private RadioSystem radioSystem;
 
     /// <summary>
@@ -48,14 +46,14 @@ public class PlayerInfo : MonoBehaviour
         }
 
         //DontDestroyOnLoad(gameObject);
+
+        EventManager.AddListener(EventName.ShowPlayerInfo, ShowPlayerInfo);
     }
 
     void Start()
     {
         //加載系統
-        playerAccountSystem = PlayerAccountSystem.instance;
         bottomBar = BottomBar.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
         radioSystem = RadioSystem.instance;
 
         //顯示玩家資訊
@@ -67,11 +65,12 @@ public class PlayerInfo : MonoBehaviour
     /// </summary>
     public void ShowPlayerInfo()
     {
-        if(playerAccountSystem == null) playerAccountSystem = PlayerAccountSystem.instance;
-        playerName.text = playerAccountSystem.playerName;
-        playerRank.text = "Rank: " + playerAccountSystem.playerRank.ToString();
-        spirit.text = "靈力: " + playerAccountSystem.spirit.ToString();
-        crystal.text = "靈晶: " + playerAccountSystem.crystal.ToString();
+        //Debug.Log("顯示玩家資訊");
+
+        playerName.text = PlayerAccountSystem.Instance.playerName;
+        playerRank.text = "Rank: " + PlayerAccountSystem.Instance.playerRank.ToString();
+        spirit.text = "靈力: " + PlayerAccountSystem.Instance.spirit.ToString();
+        crystal.text = "靈晶: " + PlayerAccountSystem.Instance.crystal.ToString();
     }
 
     /// <summary>
@@ -98,17 +97,17 @@ public class PlayerInfo : MonoBehaviour
             //開發者選項
             if (renameInput.text == "money666")
             {
-                playerAccountSystem.crystal = 900000;
-                playerAccountSystem.threa = 900000;
-                playerAccountSystem.spirit = 900000;
+                PlayerAccountSystem.Instance.crystal = 900000;
+                PlayerAccountSystem.Instance.threa = 900000;
+                PlayerAccountSystem.Instance.spirit = 900000;
                 radioSystem.PlayRadio("進入開發者模式", RadioType.System);
             }
 
-            playerAccountSystem.playerName = renameInput.text;
+            PlayerAccountSystem.Instance.playerName = renameInput.text;
             ShowPlayerInfo();
             renameInput.text = string.Empty;
             renamePage.SetActive(false);
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
         else if(isConfirmed == false)
         {

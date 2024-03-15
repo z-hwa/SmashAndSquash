@@ -8,52 +8,50 @@ using UnityEngine;
 public class SavedAndLoaded: MonoBehaviour
 {
     //單例模式
-    public static SavedAndLoaded instance;
-
-    //儲存資料模板
-    public PlayerData playerData;
-    //public A000_Saved a000_Saved;
-    public A000_Data a000_Data; //單位資料
-    public StoryRecorder storyRecorder;
-
-    private PackageSystem packageSystem;
-    private PlayerAccountSystem playerAccountSystem;
-
-    //系統
-    private LoadingSystem loadingSystem;
-    private RadioSystem radioSystem;
+    private static SavedAndLoaded _savedAndLoaded;
 
     /// <summary>
     /// 單例模式，避免重複生成的檢查
     /// </summary>
+    public static SavedAndLoaded Instance
+    {
+        get
+        {
+            if(_savedAndLoaded == null)
+            {
+                _savedAndLoaded = FindObjectOfType(typeof(SavedAndLoaded)) as SavedAndLoaded;
+                if(_savedAndLoaded == null) Debug.LogError("There needs to be one active SavedAndLoaded script on a Gameobject"); //找不到輸出錯誤訊息
+                else
+                {
+                    _savedAndLoaded.Init();
+                }
+            }
+
+            return _savedAndLoaded;
+        }
+    }
+
+    //儲存資料模板
+    private PlayerData playerData;
+    private A000_Data a000_Data; //單位資料
+    private StoryRecorder storyRecorder;
+
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            if (instance != this)
-            {
-                Destroy(gameObject);
-            }
-        }
+        Init();
+    }
 
+    private void Init()
+    {
         DontDestroyOnLoad(gameObject);
+        EventManager.AddListener(EventName.LoadData, LoadData);
     }
 
     void Start()
     {
-        //加載系統
-        loadingSystem = LoadingSystem.instance;
-        packageSystem = PackageSystem.instance;
-        playerAccountSystem = PlayerAccountSystem.instance;
-        radioSystem = RadioSystem.instance;
         
         //實例化 資料模板
         playerData = new PlayerData();  
-        //a000_Saved = new A000_Saved();
         a000_Data = new A000_Data();
         storyRecorder = new StoryRecorder();
     }
@@ -71,7 +69,8 @@ public class SavedAndLoaded: MonoBehaviour
 
         Debug.Log("saving...");
         Debug.Log($"保存到{Application.persistentDataPath}");
-        radioSystem.PlayRadio("資料保存成功", RadioType.System);
+        //radioSystem.PlayRadio("資料保存成功", RadioType.System);
+        EventManager.Trigger(EventName.PlayRadio, "資料保存成功", RadioType.System);
     }
 
     /// <summary>
@@ -82,11 +81,11 @@ public class SavedAndLoaded: MonoBehaviour
         Debug.Log("do deserialize");
 
         LoadPlayerData();
-        if(loadingSystem.isDevelop == false) LoadStoryIsReadData();
+        if(LoadingSystem.Instance.isDevelop == false) LoadStoryIsReadData();
 
         Debug.Log("loading...");
         Debug.Log("loaded.");
-        radioSystem.PlayRadio("資料加載成功", RadioType.System);
+        EventManager.Trigger(EventName.PlayRadio, "資料加載成功", RadioType.System);
     }
 
     /// <summary>
@@ -96,20 +95,20 @@ public class SavedAndLoaded: MonoBehaviour
     {
         //獲取玩家資料
         Debug.Log("Getting player data");
-        playerData.playerName = playerAccountSystem.playerName;
-        playerData.playerRank = playerAccountSystem.playerRank;
-        playerData.crystal = playerAccountSystem.crystal;
-        playerData.spirit = playerAccountSystem.spirit;
-        playerData.threa = playerAccountSystem.threa;
+        playerData.playerName = PlayerAccountSystem.Instance.playerName;
+        playerData.playerRank = PlayerAccountSystem.Instance.playerRank;
+        playerData.crystal = PlayerAccountSystem.Instance.crystal;
+        playerData.spirit = PlayerAccountSystem.Instance.spirit;
+        playerData.threa = PlayerAccountSystem.Instance.threa;
 
         //背包單位數量
-        playerData.packageCapacity = packageSystem.packageCapacity;
+        playerData.packageCapacity = PackageSystem.instance.packageCapacity;
 
         //複製出戰對列
-        playerData.unitNumber = packageSystem.unitNumber;
+        playerData.unitNumber = PackageSystem.instance.unitNumber;
         for(int i = 0;i<ConstantChart.MAXLINEUP;i++)
         {
-            playerData.lineUpId[i] = packageSystem.lineUpId[i];
+            playerData.lineUpId[i] = PackageSystem.instance.lineUpId[i];
         }
     }
 
@@ -121,10 +120,10 @@ public class SavedAndLoaded: MonoBehaviour
         var savePath = Application.persistentDataPath;
 
         //複製背包單位
-        for (int i = 0; i < packageSystem.packageCapacity; i++)
+        for (int i = 0; i < PackageSystem.instance.packageCapacity; i++)
         {
             //獲取背包單位資料
-            a000_Data.Copy(packageSystem.unit_object[i].GetComponent<A000_Default>().use_data, false);
+            a000_Data.Copy(PackageSystem.instance.unit_object[i].GetComponent<A000_Default>().use_data, false);
             var json = JsonUtility.ToJson(a000_Data);
             System.IO.File.WriteAllText($"{savePath}/packageData_{i}.json", json);
 
@@ -154,7 +153,7 @@ public class SavedAndLoaded: MonoBehaviour
     /// </summary>
     private void SaveStoryIsReadData()
     {
-        storyRecorder = playerAccountSystem.storyRecorder;  //獲取故事記錄系統
+        storyRecorder = PlayerAccountSystem.Instance.storyRecorder;  //獲取故事記錄系統
 
         //序列化
         var json = JsonUtility.ToJson(storyRecorder);
@@ -177,11 +176,11 @@ public class SavedAndLoaded: MonoBehaviour
             playerData = JsonUtility.FromJson<PlayerData>(json);
 
             //載入玩家資料
-            playerAccountSystem.playerName = playerData.playerName;
-            playerAccountSystem.playerRank = playerData.playerRank;
-            playerAccountSystem.spirit = playerData.spirit;
-            playerAccountSystem.crystal = playerData.crystal;
-            playerAccountSystem.threa = playerData.threa;
+            PlayerAccountSystem.Instance.playerName = playerData.playerName;
+            PlayerAccountSystem.Instance.playerRank = playerData.playerRank;
+            PlayerAccountSystem.Instance.spirit = playerData.spirit;
+            PlayerAccountSystem.Instance.crystal = playerData.crystal;
+            PlayerAccountSystem.Instance.threa = playerData.threa;
 
             //存檔系統不要干涉遊戲物件
             //playerAccountSystem.ShowPlayerInfo();
@@ -190,7 +189,7 @@ public class SavedAndLoaded: MonoBehaviour
             LoadPackageData();
 
             //載入對列
-            packageSystem.unitNumber = playerData.unitNumber;
+            PackageSystem.instance.unitNumber = playerData.unitNumber;
             for (int i = 0; i < ConstantChart.MAXLINEUP; i++)
             {
                 //packageSystem.lineUpId[i] = playerData.lineUpId[i];
@@ -200,7 +199,8 @@ public class SavedAndLoaded: MonoBehaviour
                 //如果該出戰位置 存在單位
                 if (id != -1)
                 {
-                    packageSystem.LineUpUnitWithID(id, i);
+                    //packageSystem.LineUpUnitWithID(id, i);
+                    EventManager.Trigger_f(EventName.LineUpUnitWithID, id, i);
                 }
             }
         }
@@ -223,7 +223,7 @@ public class SavedAndLoaded: MonoBehaviour
             storyRecorder = JsonUtility.FromJson<StoryRecorder>(json);
 
             //載入故事資料
-            playerAccountSystem.storyRecorder = storyRecorder;
+            PlayerAccountSystem.Instance.storyRecorder = storyRecorder;
         }
         catch (System.IO.FileNotFoundException e)
         {
@@ -239,7 +239,7 @@ public class SavedAndLoaded: MonoBehaviour
         var savePath = Application.persistentDataPath;
 
         //沒有載入過資料 才進行背包載入的動作
-        if(packageSystem.packageCapacity == 0)
+        if(PackageSystem.instance.packageCapacity == 0)
         {
             //載入背包單位
             for (int i = 0; i < playerData.packageCapacity; i++)
@@ -247,7 +247,8 @@ public class SavedAndLoaded: MonoBehaviour
                 //獲取存檔中的單位資料
                 var json = System.IO.File.ReadAllText($"{savePath}/packageData_{i}.json");
                 a000_Data = JsonUtility.FromJson<A000_Data>(json);
-                packageSystem.AddUnitWithID(a000_Data.id, a000_Data);
+                //packageSystem.AddUnitWithID(a000_Data.id, a000_Data);
+                EventManager.Trigger(EventName.AddUnitWithID, a000_Data.id, a000_Data);
 
                 /*var json = System.IO.File.ReadAllText($"{savePath}/packageData_{i}.json");
                 a000_Saved = JsonUtility.FromJson<A000_Saved>(json);

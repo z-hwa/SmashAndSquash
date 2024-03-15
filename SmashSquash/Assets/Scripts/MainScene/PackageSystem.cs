@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro.Examples;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,13 +48,16 @@ public class PackageSystem : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+
+        EventManager.AddListener(EventName.LineUpUnitWithID, LineUpUnitWithID);
+        EventManager.AddListener(EventName.AddUnitWithID, AddUnitWithID);
     }
 
     void Start()
     {
         InitPackageSystem();
         unitBook = UnitBook.instance;
-        loadingSystem = LoadingSystem.instance;
+        loadingSystem = LoadingSystem._loadingSystem;
         radioSystem = RadioSystem.instance;
     }
 
@@ -89,6 +93,26 @@ public class PackageSystem : MonoBehaviour
     }
 
     /// <summary>
+    /// 往背包中添加單位，根據單位圖鑑ID
+    /// 用於讀檔 以避免錯誤的增加背包數量
+    /// 以及複製存檔中的單位資料
+    /// </summary>
+    /// <param name="id">單位在圖鑑中的id</param>
+    /// <param name="a000_Data">單位的靜態儲存格式</param>
+    private void AddUnitWithID(object _id, object _a000_Data)
+    {
+        int id = (int)_id;
+        A000_Data a000_Data = (A000_Data)_a000_Data;
+
+        GameObject obj = Instantiate(unitBook.unit_illustratedBook[id], package.transform); //生成對應物件，在背包底下
+        obj.GetComponent<A000_Default>().InitUnitData();    //初始化該單位資料
+        obj.GetComponent<A000_Default>().Copy_FromSaved(a000_Data);  //初始化實體身上的單位資料
+        unit_object[packageCapacity] = obj;
+
+        packageCapacity++;
+    }
+
+    /// <summary>
     /// 設定出戰單位
     /// </summary>
     /// <param name="id">背包中的index</param>
@@ -99,6 +123,36 @@ public class PackageSystem : MonoBehaviour
         //檢查是否滿足上陣條件
         bool isCorrect = CheckLineUp(id, pos);
         if(isCorrect == false) return false;   //上陣失敗
+
+        lineUp[pos] = unit_object[id];    //把背包中的單位放進對列中
+        lineUpId[pos] = id;
+
+        int unitNum = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            if (lineUp[i] == null) continue;
+            else unitNum++;
+        }
+
+        unitNumber = unitNum; //更新背包中單位數量
+
+        return true;
+    }
+
+    /// <summary>
+    /// 設定出戰單位
+    /// </summary>
+    /// <param name="id">背包中的index</param>
+    /// <param name="pos">對列的位置</param>
+    /// <returns>上陣是否成功</returns>
+    private object LineUpUnitWithID(object _id, object _pos)
+    {
+        int id = (int)_id;
+        int pos = (int)_pos;
+
+        //檢查是否滿足上陣條件
+        bool isCorrect = CheckLineUp(id, pos);
+        if (isCorrect == false) return false;   //上陣失敗
 
         lineUp[pos] = unit_object[id];    //把背包中的單位放進對列中
         lineUpId[pos] = id;

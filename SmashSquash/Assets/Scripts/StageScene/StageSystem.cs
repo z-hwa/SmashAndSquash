@@ -40,7 +40,7 @@ public class StageSystem : MonoBehaviour
     {
         //獲取所需系統
         mapBook = MapBook.instance;
-        loadingSystem = LoadingSystem.instance;
+        loadingSystem = LoadingSystem._loadingSystem;
         
         //載入關卡列表
         LoadStageList();    

@@ -18,11 +18,8 @@ public class SettlementSystem : MonoBehaviour
     public TextMeshProUGUI award;   //獲取獎勵說明
 
     private PackageSystem packageSystem; //背包系統
-    private PlayerAccountSystem playerAccountSystem;
-    private SavedAndLoaded savedAndLoaded; //存檔系統
     private MapSystem mapSystem;
     private StorySystem storySystem;
-    private LoadingSystem loadingSystem;
 
     /// <summary>
     /// 單例模式，避免重複生成的檢查
@@ -48,10 +45,7 @@ public class SettlementSystem : MonoBehaviour
     {
         packageSystem = PackageSystem.instance;
         mapSystem = MapSystem.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
         storySystem = StorySystem.instance;
-        playerAccountSystem = PlayerAccountSystem.instance;
-        loadingSystem = LoadingSystem.instance;
     }
 
     /// <summary>
@@ -59,11 +53,10 @@ public class SettlementSystem : MonoBehaviour
     /// </summary>
     public void ShowStory(string storyRoute)
     {
-        playerAccountSystem = PlayerAccountSystem.instance;
         storySystem = StorySystem.instance;
 
         //如果沒有設定故事路徑，且新手教學未完成，撥放新手教學
-        if (storyRoute=="" && playerAccountSystem.storyRecorder.battleMethod == false) storySystem.LoadingStory("NoviceTeaching/battleMethod");
+        if (storyRoute=="" && PlayerAccountSystem.Instance.storyRecorder.battleMethod == false) storySystem.LoadingStory("NoviceTeaching/battleMethod");
     }
 
     /// <summary>
@@ -74,7 +67,7 @@ public class SettlementSystem : MonoBehaviour
     public void ShowSettlementPage(string text, bool isWin)
     {
         GiveAward(isWin);
-        savedAndLoaded.SaveData();  //存檔
+        SavedAndLoaded.Instance.SaveData();  //存檔
 
         settlementPage.SetActive(true);
         title.text = text;
@@ -98,6 +91,6 @@ public class SettlementSystem : MonoBehaviour
     /// </summary>
     public void BackToMain()
     {
-        loadingSystem.LoadTargetScene("MainScene");
+        LoadingSystem.Instance.LoadTargetScene("MainScene");
     }
 }

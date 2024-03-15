@@ -36,7 +36,7 @@ public class StageInfo : MonoBehaviour
         bool isError = LoadingStageCheck();
         if (isError == true) return;
 
-        loadingSystem = LoadingSystem.instance;
+        loadingSystem = LoadingSystem._loadingSystem;
         loadingSystem.LoadTargetScene("BattleScene");  //載入場景
     }
 

@@ -29,7 +29,6 @@ public class MapInfo : MonoBehaviour
 
     //系統
     private SettlementSystem settlementSystem;
-    private PlayerAccountSystem playerAccountSystem;
 
     /// <summary>
     /// 撥放這張地圖的故事
@@ -47,15 +46,14 @@ public class MapInfo : MonoBehaviour
     /// <returns>獎勵資訊</returns>
     public string GiveAward(bool isWin)
     {
-        playerAccountSystem = PlayerAccountSystem.instance;
 
         string awardInfo = "";
 
         if (isWin == true)
         {
-            playerAccountSystem.spirit += spiritNum;
-            playerAccountSystem.crystal += crystalNum;
-            playerAccountSystem.threa += threaNum;
+            PlayerAccountSystem.Instance.spirit += spiritNum;
+            PlayerAccountSystem.Instance.crystal += crystalNum;
+            PlayerAccountSystem.Instance.threa += threaNum;
             awardInfo = awardInfo + "靈力*" + spiritNum + "\n";
             awardInfo = awardInfo + "靈晶*" + crystalNum + "\n";
             awardInfo = awardInfo + "靈粹*" + threaNum + "\n";

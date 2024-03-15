@@ -9,8 +9,6 @@ using UnityEngine.UI;
 public class SummonPool : MonoBehaviour
 {
     private PackageSystem packageSystem;
-    private PlayerAccountSystem playerAccountSystem;
-    private SavedAndLoaded savedAndLoaded;
     private RadioSystem radioSystem;
 
     [Header("召喚池設定")]
@@ -22,8 +20,6 @@ public class SummonPool : MonoBehaviour
     void Start()
     {
         packageSystem = PackageSystem.instance;
-        playerAccountSystem = PlayerAccountSystem.instance;
-        savedAndLoaded = SavedAndLoaded.instance;
         radioSystem = RadioSystem.instance;
 
         CountRate();
@@ -53,11 +49,11 @@ public class SummonPool : MonoBehaviour
     /// </summary>
     public void Summon1()
     {
-        if (playerAccountSystem.crystal >= 30)
+        if (PlayerAccountSystem.Instance.crystal >= 30)
         {
-            playerAccountSystem.crystal -= 30;
+            PlayerAccountSystem.Instance.crystal -= 30;
             Summon(1, false);
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
         else
         {
@@ -71,11 +67,11 @@ public class SummonPool : MonoBehaviour
     /// 十抽
     /// </summary>
     public void Summon10() {
-        if (playerAccountSystem.crystal >= 300)
+        if (PlayerAccountSystem.Instance.crystal >= 300)
         {
-            playerAccountSystem.crystal -= 300;
+            PlayerAccountSystem.Instance.crystal -= 300;
             Summon(10, false);
-            savedAndLoaded.SaveData();  //存檔
+            SavedAndLoaded.Instance.SaveData();  //存檔
         }
         else
         {
